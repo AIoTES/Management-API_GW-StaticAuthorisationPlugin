@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+
+  express-gw:
+    image: express-gw-keycloak:develop
+    ports:
+      - target: 8080
+        published: 8080
+        protocol: tcp
+        mode: host
+    configs:
+      - source: gateway-conf
+        target: /var/lib/eg/gateway.config.yml
+      - source: system-conf
+        target: /var/lib/eg/system.config.yml
+    networks:
+      - keycloak-express-activage-network
+    environment:
+      - LOG_LEVEL=debug
+
+  echo-server:
+    image: jmalloc/echo-server:latest
+    environment:
+      - PORT=80
+      - LOG_HTTP_BODY=STDOUT
+    networks:
+      - keycloak-express-activage-network
+
+configs:
+  gateway-conf:
+    file: ./express/gateway.config.yml
+  system-conf:
+    file: ./express/system.config.yml
+
+networks:
+  keycloak-express-activage-network:
+    external: true

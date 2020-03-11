@@ -1,0 +1,88 @@
+http:
+  port: 8080
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  protect-authenticated:
+    host: '*'
+    paths: ['/protected/authenticated*']
+  protect-realm-role:
+    host: '*'
+    paths: ['/protected/realm-role*']
+  protect-application-role:
+    host: '*'
+    paths: ['/protected/app-role*']
+  protect-specific-application-role:
+    host: '*'
+    paths: ['/protected/specific-app-role*']
+  protect-js-condition:
+    host: '*'
+    paths: ['/protected/js-condition*']
+serviceEndpoints:
+  echo-server:
+    url: "http://echo-server"
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+  - keycloak-protect
+pipelines:
+  protect-authenticated:
+    apiEndpoints:
+      - protect-authenticated
+    policies:
+      - keycloak-protect:
+      - proxy:
+          - action:
+              serviceEndpoint: echo-server
+              changeOrigin: true
+  protect-realm-role:
+    apiEndpoints:
+      - protect-realm-role
+    policies:
+      - keycloak-protect:
+        - action:
+            role: "realm:offline_access"
+      - proxy:
+          - action:
+              serviceEndpoint: echo-server
+              changeOrigin: true
+  protect-application-role:
+    apiEndpoints:
+      - protect-application-role
+    policies:
+      - keycloak-protect:
+        - action:
+            role: "intermw-editor"
+      - proxy:
+          - action:
+              serviceEndpoint: echo-server
+              changeOrigin: true
+  protect-specific-application-role:
+    apiEndpoints:
+      - protect-specific-application-role
+    policies:
+      - keycloak-protect:
+        - action:
+            role: "express-gw-test:intermw-editor"
+      - proxy:
+          - action:
+              serviceEndpoint: echo-server
+              changeOrigin: true
+  protect-js-condition:
+    apiEndpoints:
+      - protect-js-condition
+    policies:
+      - keycloak-protect:
+        - action:
+           jsProtect: 'token.hasRole("express-gw-test:intermw-editor")'
+      - proxy:
+          - action:
+              serviceEndpoint: echo-server
+              changeOrigin: true

@@ -1,0 +1,42 @@
+# Core
+db:
+  redis:
+    emulate: true
+    namespace: EG
+
+  # plugins:
+  # express-gateway-plugin-example:
+  #   param1: 'param from system.config'
+
+crypto:
+  cipherKey: sensitiveKey
+  algorithm: aes256
+  saltRounds: 10
+
+# OAuth2 Settings
+session:
+  secret: keyboard cat
+  resave: false
+  saveUninitialized: false
+accessTokens:
+  timeToExpiry: 7200000
+refreshTokens:
+  timeToExpiry: 7200000
+authorizationCodes:
+  timeToExpiry: 300000
+
+plugins:
+  express-gateway-keycloak:
+    package: express-gateway-keycloak
+    keycloakConfig:
+      realm: demo
+      auth-server-url: "https://keycloak-activage.hopu.eu/auth"
+      ssl-required: external
+      resource: express-gw-test
+      public-client: false
+      bearer-only: true
+      confidential-port: 0
+    session:
+      secret: a4c147dc-373f-4500-8324-6a33aba5a751
+      resave: false
+      saveUninitialized: true

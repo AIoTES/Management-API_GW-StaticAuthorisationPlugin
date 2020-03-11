@@ -1,22 +1,23 @@
 {
   "name": "express-gateway-keycloak",
   "version": "0.1.0",
-  "description": "Keycloak plugin for express gateway",
-  "main": "build/manifest.js",
-  "types": "build/manifest.d.ts",
+  "description": "Keycloak plugin for aiotes api express gateway integration",
+  "main": "manifest.js",
+  "types": "manifest.d.ts",
   "scripts": {
-    "compile": "tsc --skipLibCheck -p .",
-    "check": "gts check",
-    "clean": "gts clean",
-    "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run check"
+    "compile": "tsc --skipLibCheck -p . && cp package.json build/ && npm install --production --prefix build/",
+    "package": "tar zcf express-gateway-keycloak.tgz build",
+    "build": "npm run clean && npm run compile && npm run package",
+    "buildDocker": "npm run clean && npm run compile && npm run package && docker build -t express-gw-keycloak:develop .",
+    "cleanBuild": "rm -rf ./build",
+    "cleanPackage": "rm -rf express-gateway-keycloak.tgz",
+    "clean": "npm run cleanBuild && npm rum cleanPackage"
   },
-  "author": "community",
+  "author": "Activage",
   "license": "Apache License, Version 2.0",
   "dependencies": {
-    "keycloak-connect": "^8.0.1",
+    "flatted": "^2.0.1",
+    "keycloak-connect": "6.0.1",
     "memorystore": "^1.6.0"
   },
   "devDependencies": {
