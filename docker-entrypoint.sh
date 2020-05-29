@@ -27,6 +27,7 @@ then
     export NODE_EXTRA_CA_CERT=/var/lib/certs/live/aiotes/chain.pem
     echo "NODE_EXTRA_CA_CERT="$(printenv NODE_EXTRA_CA_CERT)
 	NODE_ENVS=$NODE_ENVS" NODE_EXTRA_CA_CERT="$(printenv NODE_EXTRA_CA_CERT)
+    npm config set strict-ssl false
 fi
 #
 #launch Express Gateway
